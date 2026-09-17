@@ -212,6 +212,7 @@ class Evaluator:
                 impressions = row[4].split()
 
                 labels, raw_scores = [], []
+                impression_articles = []
                 for imp in impressions:
                     parts = imp.split("-")
                     if len(parts) != 2:
@@ -219,14 +220,16 @@ class Evaluator:
                     nid, clicked = parts[0], int(parts[1])
                     art = article_db.get(nid, {"news_id": nid, "persuasion_risk": 0.0,
                                                "persuasion_scores": {}})
-                    # Use responsible score as our model's score
-                    resp_score = art.get("responsible_score",
-                                         np.random.rand())   # fallback
+                    # Use a persisted model score; use a deterministic neutral
+                    # relevance prior when preprocessing has not scored articles.
+                    resp_score = float(art.get(
+                        "responsible_score",
+                        art.get("relevance", 1.0 - float(art.get("persuasion_risk", 0.0))),
+                    ))
                     labels.append(clicked)
                     raw_scores.append(resp_score)
                     unfiltered_pool.append(art)
-                    if clicked:
-                        ranked_pool.append(art)
+                    impression_articles.append(art)
 
                 if len(set(labels)) < 2:
                     continue
@@ -235,6 +238,14 @@ class Evaluator:
                 all_ndcgs.append(ndcg_at_k(labels, raw_scores, k))
                 all_p10.append(precision_at_k(labels, raw_scores, k))
                 all_mrrs.append(mrr(labels, raw_scores))
+                ranked_pool.extend(sorted(
+                    impression_articles,
+                    key=lambda article: float(article.get(
+                        "responsible_score",
+                        article.get("relevance", 1.0 - float(article.get("persuasion_risk", 0.0))),
+                    )),
+                    reverse=True,
+                )[:k])
 
         result = {
             "auc":              float(np.mean(all_aucs))   if all_aucs   else 0.0,

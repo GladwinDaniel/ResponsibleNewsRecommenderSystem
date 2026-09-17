@@ -90,6 +90,9 @@ class PersuasionProfile:
                     similar techniques receive maximum suppression in future rerankings.
           - 'skip': User ignored; slight decay to reflect lack of engagement.
         """
+        if action not in {"click", "skip", "flag"}:
+            raise ValueError("action must be one of: click, skip, flag")
+
         vec = np.array([persuasion_scores.get(t, 0.0) for t in TECHNIQUES],
                        dtype=np.float32)
         if action == "flag":

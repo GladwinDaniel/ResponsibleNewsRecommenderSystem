@@ -18,7 +18,7 @@ import sys
 import time
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Optional
+from typing import Literal, Optional
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -129,7 +129,9 @@ class ScoreResponse(BaseModel):
 class FeedbackRequest(BaseModel):
     user_id: str
     news_id: str
-    action:  str = Field(..., description="'click' | 'skip' | 'flag'")
+    action:  Literal["click", "skip", "flag"] = Field(
+        ..., description="'click' | 'skip' | 'flag'"
+    )
 
 
 class SDGMetrics(BaseModel):

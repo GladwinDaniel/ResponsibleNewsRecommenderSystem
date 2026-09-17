@@ -158,7 +158,14 @@ def build_graph(split: str = "train", add_co_occur: bool = False) -> nx.MultiDiG
             user_node = f"user:{uid}"
             G.add_node(user_node, node_type="user", user_id=uid)
             user_count += 1
-            for nid in data.get("history", []) + data.get("impressions", []):
+            # `history` contains previously read items; `impressions` contains
+            # clicked items extracted during preprocessing.
+            for nid in data.get("history", []):
+                art_node = f"article:{nid}"
+                if G.has_node(art_node):
+                    G.add_edge(user_node, art_node, edge_type="VIEWED")
+                    click_count += 1
+            for nid in data.get("impressions", []):
                 art_node = f"article:{nid}"
                 if G.has_node(art_node):
                     G.add_edge(user_node, art_node, edge_type="CLICKED")

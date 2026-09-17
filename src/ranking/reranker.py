@@ -62,6 +62,7 @@ class Reranker:
         self._user_idx:    dict[str, int] = {}
         self._article_idx: dict[str, int] = {}
         self._idx_article: dict[int, str] = {}           # int → news_id
+        self._article_pos: dict[str, int] = {}
 
         self._articles:  dict[str, dict] = {}            # news_id → article dict
         self._profiles:  dict[str, object] = {}          # user_id → PersuasionProfile
@@ -94,8 +95,8 @@ class Reranker:
 
             # If embeddings are stored
             if "user_emb" in payload:
-                self._user_emb    = payload["user_emb"].numpy()
-                self._article_emb = payload["article_emb"].numpy()
+                self._user_emb    = np.asarray(payload["user_emb"])
+                self._article_emb = np.asarray(payload["article_emb"])
             else:
                 log.warning("Embeddings not in checkpoint — running inference.")
                 self._generate_random_embeddings()
@@ -157,6 +158,8 @@ class Reranker:
             if not news_ids:
                 return
 
+            self._article_pos = {nid: i for i, nid in enumerate(news_ids)}
+
             if self._article_emb is not None and len(self._article_idx) > 0:
                 embs = []
                 for nid in news_ids:
@@ -202,6 +205,27 @@ class Reranker:
 
     # ── Ranking ───────────────────────────────────────────────────────────────
 
+    def _article_embedding(self, news_id: str) -> np.ndarray:
+        """Return the article vector using the same mapping as retrieval."""
+        if self._article_emb is None or len(self._article_emb) == 0:
+            return np.zeros(128, dtype=np.float32)
+        article_idx = self._article_idx.get(f"article:{news_id}")
+        if article_idx is not None:
+            return self._article_emb[article_idx % len(self._article_emb)]
+        position = self._article_pos.get(news_id)
+        if position is not None:
+            return self._article_emb[position % len(self._article_emb)]
+        return self._article_emb[abs(hash(news_id)) % len(self._article_emb)]
+
+    def _user_embedding(self, user_id: str) -> np.ndarray:
+        """Return a stable user vector, including for demo users."""
+        if self._user_emb is None or len(self._user_emb) == 0:
+            return np.zeros(128, dtype=np.float32)
+        user_idx = self._user_idx.get(f"user:{user_id}")
+        if user_idx is not None:
+            return self._user_emb[user_idx % len(self._user_emb)]
+        return self._user_emb.mean(axis=0)
+
     def rank(
         self,
         user_id: str,
@@ -221,12 +245,7 @@ class Reranker:
         beta  = beta  if beta  is not None else self.beta
 
         # ── Get user embedding ────────────────────────────────────────────────
-        u_int = self._user_idx.get(f"user:{user_id}")
-        if u_int is not None and self._user_emb is not None:
-            u_emb = self._user_emb[u_int % len(self._user_emb)]
-        else:
-            u_emb = self._user_emb.mean(axis=0) if self._user_emb is not None else \
-                    np.zeros(128, dtype=np.float32)
+        u_emb = self._user_embedding(user_id)
 
         # ── Get latest user profile from DB or cache ──────────────────────────
         profile_dict = self.get_user_profile(user_id)
@@ -248,12 +267,7 @@ class Reranker:
         scored: list[dict] = []
         for nid in candidate_ids:
             art   = self._articles[nid]
-            a_int = self._article_idx.get(f"article:{nid}")
-            if a_int is not None and self._article_emb is not None:
-                a_emb = self._article_emb[a_int % len(self._article_emb)]
-            else:
-                a_emb = self._article_emb.mean(axis=0) if self._article_emb is not None else \
-                        np.zeros(128, dtype=np.float32)
+            a_emb = self._article_embedding(nid)
 
             result = score_article_for_user(art, u_emb, a_emb, profile, alpha, beta)
             scored.append({**art, **result})
@@ -305,15 +319,8 @@ class Reranker:
         if article is None:
             return {"error": f"Article {news_id} not found."}
 
-        u_int = self._user_idx.get(f"user:{user_id}")
-        u_emb = self._user_emb[u_int % len(self._user_emb)] \
-                if u_int is not None and self._user_emb is not None \
-                else np.zeros(128, dtype=np.float32)
-
-        a_int = self._article_idx.get(f"article:{news_id}")
-        a_emb = self._article_emb[a_int % len(self._article_emb)] \
-                if a_int is not None and self._article_emb is not None \
-                else np.zeros(128, dtype=np.float32)
+        u_emb = self._user_embedding(user_id)
+        a_emb = self._article_embedding(news_id)
 
         profile_dict = self.get_user_profile(user_id)
         from src.models.persuasion_profile import PersuasionProfile
