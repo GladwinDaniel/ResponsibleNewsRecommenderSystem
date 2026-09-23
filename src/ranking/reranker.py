@@ -89,7 +89,7 @@ class Reranker:
 
         try:
             import torch
-            payload        = torch.load(ckpt_path, map_location="cpu")
+            payload        = torch.load(ckpt_path, map_location="cpu", weights_only=False)
             self._user_idx    = payload.get("user_idx", {})
             self._article_idx = payload.get("article_idx", {})
 
@@ -262,7 +262,7 @@ class Reranker:
             candidate_ids = list(self._articles.keys())
 
         # ── Stage 2: Responsible Scoring on Candidates ────────────────────────
-        from src.ranking.responsible_score import score_article_for_user, provider_fairness_cap
+        from src.ranking.responsible_score import score_article_for_user, calibrated_provider_fairness
 
         scored: list[dict] = []
         for nid in candidate_ids:
@@ -276,7 +276,7 @@ class Reranker:
         scored.sort(key=lambda x: x["responsible_score"], reverse=True)
 
         if apply_cap:
-            scored = provider_fairness_cap(scored, cap=self.provider_cap)
+            return calibrated_provider_fairness(scored, k=top_k, cap=self.provider_cap)
 
         return scored[:top_k]
 

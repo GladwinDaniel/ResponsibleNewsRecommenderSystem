@@ -35,65 +35,45 @@ export default function ArticleDrawer({ article, onClose }: ArticleDrawerProps) 
   if (!article) return null
 
   const riskClass  = article.risk_label.toLowerCase()
-  const riskColors = { low: '#22c55e', medium: '#f59e0b', high: '#ef4444' }
-  const riskColor  = riskColors[riskClass as keyof typeof riskColors] ?? '#94a3b8'
+  const riskColors = { low: 'var(--risk-low)', medium: 'var(--risk-medium)', high: 'var(--risk-high)' }
+  const riskColor  = riskColors[riskClass as keyof typeof riskColors] ?? 'var(--text-muted)'
 
-  // Sort techniques by score descending
-  const allTechniques = article.top_techniques
-    .sort((a, b) => b.score - a.score)
+  const allTechniques = [...article.top_techniques].sort((a, b) => b.score - a.score)
 
   return (
     <>
       <div className="drawer-overlay" onClick={onClose} aria-hidden />
-
       <aside className="drawer" role="dialog" aria-label="Article detail panel" aria-modal>
-        {/* Header */}
         <div className="drawer-header">
-          <button
-            className="drawer-close"
-            onClick={onClose}
-            id="drawer-close-btn"
-            aria-label="Close panel"
-          >
-            ✕
-          </button>
+          <button className="drawer-close" onClick={onClose} id="drawer-close-btn" aria-label="Close panel">✕</button>
 
-          <h2 style={{ fontSize: 16, fontWeight: 700, lineHeight: 1.4, marginBottom: 12 }}>
+          <h2 style={{ fontFamily: 'var(--font-editorial)', fontSize: 20, fontWeight: 600, lineHeight: 1.35, marginBottom: 14, color: 'var(--text-primary)' }}>
             {article.title}
           </h2>
 
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-            <span
-              className={`risk-badge ${riskClass}`}
-              style={{ fontSize: 13, padding: '4px 12px' }}
-            >
+            <span className={`risk-badge ${riskClass}`} style={{ fontSize: 12, padding: '4px 12px' }}>
               {article.risk_emoji} {article.risk_label} RISK
             </span>
             <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-              Score: <strong style={{ color: 'var(--accent-blue)' }}>
+              Score: <strong style={{ color: 'var(--accent-blue)', fontFamily: 'var(--font-display)' }}>
                 {article.responsible_score.toFixed(3)}
               </strong>
             </span>
             {article.url && (
-              <a
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ fontSize: 11, color: 'var(--accent-cyan)', marginLeft: 'auto' }}
-              >
+              <a href={article.url} target="_blank" rel="noopener noreferrer"
+                style={{ fontSize: 11, color: 'var(--accent-cyan)', marginLeft: 'auto', fontWeight: 600 }}>
                 Open ↗
               </a>
             )}
           </div>
         </div>
 
-        {/* Body */}
         <div className="drawer-body">
-
           {/* Score Breakdown */}
           <div className="drawer-section">
             <div className="drawer-section-title">Score Breakdown</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               {[
                 { label: 'Responsible Score (final)', val: article.responsible_score, color: 'var(--accent-cyan)' },
                 { label: 'Relevance (GNN)',            val: article.relevance,         color: 'var(--accent-blue)' },
@@ -101,16 +81,13 @@ export default function ArticleDrawer({ article, onClose }: ArticleDrawerProps) 
               ].map(({ label, val, color }) => (
                 <div key={label}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                    <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{label}</span>
-                    <span style={{ fontSize: 13, fontWeight: 600, color, fontFamily: 'monospace' }}>
-                      {val.toFixed(3)}
+                    <span style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 500 }}>{label}</span>
+                    <span style={{ fontSize: 14, fontWeight: 700, color, fontFamily: 'var(--font-display)' }}>
+                      {(val * 100).toFixed(1)}
                     </span>
                   </div>
                   <div className="technique-bar-track" style={{ height: 8 }}>
-                    <div
-                      className="technique-bar-fill"
-                      style={{ width: `${val * 100}%`, background: color, borderRadius: 4 }}
-                    />
+                    <div className="technique-bar-fill" style={{ width: `${val * 100}%`, background: color, borderRadius: 4 }} />
                   </div>
                 </div>
               ))}
@@ -120,7 +97,7 @@ export default function ArticleDrawer({ article, onClose }: ArticleDrawerProps) 
           {/* Explanation */}
           <div className="drawer-section">
             <div className="drawer-section-title">AI Explanation</div>
-            <div className="explanation-box">
+            <div className="explanation-box" style={{ borderLeft: `3px solid ${riskColor}` }}>
               {article.explanation || 'No explanation available.'}
             </div>
           </div>
@@ -138,18 +115,9 @@ export default function ArticleDrawer({ article, onClose }: ArticleDrawerProps) 
                       {FULL_LABELS[t.technique] ?? t.technique.replace(/_/g, ' ')}
                     </div>
                     <div className="technique-bar-track">
-                      <div
-                        className="technique-bar-fill"
-                        style={{
-                          width: `${t.score * 100}%`,
-                          opacity: t.score > 0.3 ? 1 : 0.35,
-                        }}
-                      />
+                      <div className="technique-bar-fill" style={{ width: `${t.score * 100}%`, opacity: t.score > 0.3 ? 1 : 0.3 }} />
                     </div>
-                    <div
-                      className="technique-score"
-                      style={{ color: t.score > 0.3 ? riskColor : 'var(--text-muted)' }}
-                    >
+                    <div className="technique-score" style={{ color: t.score > 0.3 ? riskColor : 'var(--text-muted)' }}>
                       {t.score.toFixed(2)}
                     </div>
                   </div>
@@ -161,14 +129,13 @@ export default function ArticleDrawer({ article, onClose }: ArticleDrawerProps) 
           {/* SDG16 Note */}
           <div className="drawer-section">
             <div className="drawer-section-title">SDG 16 Alignment</div>
-            <div className="explanation-box" style={{ fontSize: 12, lineHeight: 1.7 }}>
-              <strong>SDG 16.10</strong> — This article is evaluated for informational quality.<br />
-              <strong>SDG 16.6</strong> — Every recommendation includes a traceable explanation.<br />
-              <strong>SDG 16.b</strong> — Provider diversity is enforced at the feed level.<br />
+            <div className="explanation-box" style={{ fontSize: 12, lineHeight: 1.7, borderLeft: '3px solid var(--accent-blue)' }}>
+              <strong>SDG 16.10</strong> — Article evaluated for informational quality.<br />
+              <strong>SDG 16.6</strong> — Recommendation includes traceable explanation.<br />
+              <strong>SDG 16.b</strong> — Provider diversity enforced at feed level.<br />
               <br />
               <em style={{ color: 'var(--text-muted)' }}>
-                Scores are computed by a RoBERTa model fine-tuned on SemEval-2023 Task 3.
-                Always verify important claims independently.
+                Scores computed by RoBERTa fine-tuned on SemEval-2023 Task 3. Always verify important claims independently.
               </em>
             </div>
           </div>
