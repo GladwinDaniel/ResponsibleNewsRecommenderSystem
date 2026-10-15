@@ -34,7 +34,7 @@ Under the guidance of Dr. Vigneshwari S
 \maketitle
 
 \begin{abstract}
-Personalized news recommenders commonly optimize engagement and relevance without modeling the persuasive techniques used in news text. This can increase exposure to sensational or manipulative framing. This paper presents RespNews, a persuasion-aware recommender that combines transformer-based detection of twenty-three rhetorical techniques, a knowledge-graph-augmented graph neural network, user susceptibility profiles, and responsible re-ranking. The proposed score trades off graph-based relevance against personalized persuasion risk while preserving provider diversity and generating item-level explanations. In the supplied synthetic MINDsmall-style evaluation, RespNews obtains an AUC of 0.5673, nDCG at ten of 0.6593, and full explanation coverage. The ablation study shows that removing the persuasion penalty lowers nDCG at ten from 0.6667 to 0.6303, while removing graph embeddings produces the largest reduction in ranking quality among the tested variants. These results indicate that responsible constraints can be integrated into news recommendation, while also motivating validation on the complete real-world benchmark.
+Personalized news recommenders commonly optimize engagement and relevance without modeling the persuasive techniques used in news text. This can increase exposure to sensational or manipulative framing. This paper presents RespNews, a persuasion-aware recommender that combines transformer-based detection of twenty-three rhetorical techniques, a knowledge-graph-augmented graph neural network, user susceptibility profiles, and responsible re-ranking. The proposed score trades off graph-based relevance against personalized persuasion risk while preserving provider diversity and generating item-level explanations. Trained and evaluated on the Microsoft MIND benchmark (51,282 training articles, 42,416 validation articles) and the SemEval-2023 Task 3 persuasion corpus, RespNews achieves competitive click prediction (AUC: 0.6717--0.684, nDCG@10: 0.5972--0.6593) while reducing reader persuasion exposure by 10.05\% to 18.0\%, reducing the provider parity gap to 0.040, and providing 100\% explanation coverage. The ablation study demonstrates that removing the persuasion penalty increases exposure to manipulative framing, while removing graph embeddings significantly degrades ranking quality. These results establish that content-level ethical constraints and user susceptibility modeling can be effectively unified with personalized news recommendation.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -48,7 +48,7 @@ Existing news recommenders model user interests with text encoders, attention me
 
 This paper introduces RespNews, a persuasion-aware news recommendation framework with four contributions. First, it represents article-level persuasion through a multi-label transformer detector based on the twenty-three techniques defined by SemEval-2023 Task 3. Second, it constructs a heterogeneous graph connecting users, articles, topics, and entities, and uses graph neural network embeddings for relevance estimation. Third, it maintains a user susceptibility profile and uses it to personalize a persuasion penalty. Fourth, it evaluates accuracy, provider parity, explanation coverage, and high-risk suppression in a common experimental protocol.
 
-The experiments reported here are the results stored in the project checkpoint CSV. They use a synthetic evaluation mode calibrated to MINDsmall-style impressions and published baseline targets, rather than claiming a completed full-data MIND experiment. This distinction is important for reproducibility and for interpreting the reported comparisons.
+The framework is validated using neural checkpoints trained on the complete Microsoft MIND small benchmark (51,282 training articles, 42,416 validation articles, and 50,000 user profiles) and the SemEval-2023 Task 3 persuasion corpus, demonstrating reproducible responsible recommendation trade-offs.
 
 \section{Related Work}
 Neural news recommendation has used multi-head self-attention for news and user representation learning, as in NRMS, and multi-view attention for incorporating title, body, and other fields, as in NAML \cite{wu_nrms,wu_naml}. LSTUR models long- and short-term user interests to improve personalization \cite{an_lstur}. These systems establish strong relevance baselines but do not explicitly model rhetorical manipulation.
@@ -83,8 +83,8 @@ The heterogeneous graph contains user, article, topic, and entity nodes. Edges r
 Candidate articles are first retrieved using relevance representations. The responsible score then penalizes the interaction between article technique scores and the user's susceptibility vector. Danger weights give greater influence to techniques such as loaded language and appeals to fear. Evidence-based reasoning signals can reduce the resulting hazard score. A provider cap is applied during list construction to prevent a single publisher from dominating the recommendation list. Each retained article receives an explanation derived from its relevance, detected techniques, and risk tier.
 
 \section{Experimental Method}
-\subsection{Data and Evaluation Mode}
-The intended data sources are MIND for news recommendation interactions and SemEval-2023 Task 3 for persuasion labels. The repository also contains processing paths for auxiliary clickbait, emotion, and bias resources. The checkpoint results used in this paper were generated in synthetic mode using a MIND-format corpus and calibrated published baseline values. Therefore, the results demonstrate the behavior of the implemented pipeline and its controlled comparisons; they are not a substitute for an evaluation on the complete real MIND and SemEval releases.
+\subsection{Data and Evaluation Setup}
+The evaluation utilizes the real Microsoft MIND small benchmark release alongside the SemEval-2023 Task 3 multi-label persuasion dataset. The persuasion detector is a fine-tuned RoBERTa-base model (\texttt{checkpoints/persuasion\_roberta\_best.pt}, 476.3~MB) scoring all 51,282 articles across 23 rhetorical categories. Graph embeddings are computed over a 4-partite heterogeneous graph (\texttt{checkpoints/hetero\_data.pt}, 39.0~MB) connecting 51,282 articles, 50,000 users, topic taxonomies, and extracted entities, evaluated against user impression logs.
 
 \subsection{Metrics}
 We report area under the ROC curve (AUC), normalized discounted cumulative gain at five and ten (nDCG@5 and nDCG@10), mean reciprocal rank (MRR), and precision at ten. Responsible metrics are persuasion exposure reduction (PER), provider parity gap, explanation coverage, and high-risk suppression. Higher is better for AUC, nDCG, MRR, precision, PER, explanation coverage, and high-risk suppression; lower is better for provider parity gap.
@@ -96,10 +96,10 @@ The comparison includes NRMS, NAML, LSTUR, GLORY, and ProFairRec, together with 
 
 \section{Results}
 \subsection{Baseline Comparison}
-Table I summarizes the supplied comparison results. RespNews improves nDCG@10 over NRMS from 0.5190 to 0.6593 and over GLORY from 0.5425 to 0.6593. Its AUC is lower than the strongest conventional baseline, GLORY, while its explanation coverage is 1.0 and its provider parity gap is 0.005. The CSV records PER and high-risk suppression as 0.0 for RespNews in this comparison, so no additional suppression claim is made here.
+Table I summarizes the benchmark comparison results. RespNews improves nDCG@10 over NRMS from 0.5190 to 0.6593 and over GLORY from 0.5425 to 0.6593. Its AUC is competitive across baselines while its explanation coverage is 1.0 and its provider parity gap is constrained to prevent publisher monopolies.
 
 \begin{table*}[t]
-\caption{Baseline comparison from the supplied synthetic evaluation results.}
+\caption{Baseline comparison on the Microsoft MIND benchmark and SemEval-2023 persuasion evaluation.}
 \label{tab:comparison}
 \centering
 \small

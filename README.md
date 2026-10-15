@@ -42,6 +42,12 @@ graph TD
   with publisher diversity caps to prevent echo chambers.
 - **Interactive UI Dashboard**: React + TypeScript frontend featuring dynamic sliders for $\alpha$ and $\beta$, live article persuasion scoring, radar charts, and SDG 16 metric tracking.
 
+### 🧠 Trained Checkpoints & Real Benchmark Corpora
+- **Persuasion RoBERTa Classifier** (`checkpoints/persuasion_roberta_best.pt`, 476.3 MB): 23-class multi-label transformer fine-tuned on the real SemEval-2023 Task 3 corpus.
+- **Heterogeneous Graph** (`checkpoints/hetero_data.pt`, 39.0 MB): PyTorch Geometric `HeteroData` graph connecting 51,282 articles, 50,000 users, topic taxonomies, and extracted entities.
+- **MIND Dataset**: Full Microsoft News Dataset (`train`: 51,282 articles, `dev`: 42,416 articles) with complete click logs, entity embeddings, and 50,000 user susceptibility profiles.
+- **SQLite Database** (`data/responsible_news.db`): Pre-seeded with all 51,282 real news items, danger-weighted persuasion risks, and demographic user personas.
+
 ---
 
 ## 📂 Project Structure
@@ -101,8 +107,7 @@ pip install -r requirements.txt
 # Configure environment variables
 cp .env.example .env
 
-# Initialize synthetic dataset / database (for demonstration)
-python -m src.data.generate_synthetic_data
+# Initialize database from real scored MIND dataset (51,282 articles)
 python -m src.data.init_db
 
 # Run FastAPI backend

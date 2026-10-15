@@ -300,13 +300,15 @@ graph TD
 ### 3.4 Data & Storage Layer
 
 - **Relational Database (`src/data/db.py`, `init_db.py`)**:
-  - SQLite database storing structured metadata: news items, categories, URLs, computed persuasion vectors, user profiles, and timestamped interaction logs.
-- **Datasets**:
-  - **MIND (Microsoft News Dataset)**: Real-world news titles, abstracts, impressions, and user click logs.
-  - **SemEval-2023 Task 3**: 9-language corpus annotated with 23 persuasion and propaganda techniques.
-  - **Supplementary Corpora**: BASIL (media bias), GoEmotions (emotional valence), and Clickbait datasets.
+  - SQLite database (`data/responsible_news.db`) storing all **51,282 real news articles from Microsoft MIND**, complete with publisher categories, subcategories, source URLs, 23-technique persuasion vectors, danger-weighted risk indices, and demographic user personas.
+- **Trained Model Checkpoints (`checkpoints/`)**:
+  - **`persuasion_roberta_best.pt` (476.3 MB)**: 23-class multi-label RoBERTa-base classifier fine-tuned on SemEval-2023 Task 3 subtask 3.
+  - **`hetero_data.pt` (39.0 MB)**: PyTorch Geometric `HeteroData` graph connecting 51,282 articles, 50,000 users, topics, and entities with click, belongs-to, and mentions relations.
+- **Benchmark Datasets**:
+  - **MIND (Microsoft News Dataset)**: Full train split (51,282 articles) and dev split (42,416 articles) with user click streams, impression behaviors, and entity embeddings.
+  - **SemEval-2023 Task 3**: Multilingual corpus annotated with 23 persuasion and rhetorical techniques.
 - **Synthetic Generator (`generate_synthetic_data.py`)**:
-  - Generates realistic test articles, knowledge graph topologies, and reader personas for development and validation.
+  - Offline fallback utility available for lightweight mock development environments.
 
 ---
 

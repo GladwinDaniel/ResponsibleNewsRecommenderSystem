@@ -130,16 +130,55 @@ def download_and_extract_mind(splits=("train", "dev")):
             continue
 
         log.info("Downloading MIND %s from %s ...", split, url)
+        downloaded = False
         try:
             urllib.request.urlretrieve(url, zip_path)
+            downloaded = True
+        except Exception as exc:
+            log.warning("Azure download failed (%s). Attempting HuggingFace fallback...", exc)
+            hf_token = os.environ.get("HF_TOKEN", "")
+            if not hf_token:
+                try:
+                    from kaggle_secrets import UserSecretsClient
+                    hf_token = UserSecretsClient().get_secret("HF_TOKEN")
+                except Exception:
+                    pass
+            if hf_token:
+                try:
+                    from huggingface_hub import hf_hub_download
+                    local_f = hf_hub_download(
+                        repo_id="yjw1029/MIND",
+                        filename=f"MINDsmall_{split}.zip",
+                        repo_type="dataset",
+                        token=hf_token,
+                    )
+                    shutil.copy2(local_f, zip_path)
+                    downloaded = True
+                    log.info("Downloaded MIND %s from HuggingFace.", split)
+                except Exception as hf_err:
+                    log.error("HuggingFace download failed: %s", hf_err)
+
+        if downloaded and zip_path.exists():
             log.info("Extracting %s to %s ...", zip_path.name, split_dir)
             with zipfile.ZipFile(zip_path, "r") as zf:
                 zf.extractall(split_dir)
+            for item in list(split_dir.iterdir()):
+                if item.is_dir():
+                    for f in item.iterdir():
+                        target = split_dir / f.name
+                        if target.exists() and target.is_dir():
+                            shutil.rmtree(target)
+                        elif target.exists():
+                            target.unlink()
+                        shutil.move(str(f), str(target))
+                    try:
+                        item.rmdir()
+                    except Exception:
+                        pass
             if zip_path.exists():
                 zip_path.unlink()
             log.info("MIND %s extracted successfully.", split)
-        except Exception as exc:
-            log.warning("Could not download from Azure (%s). If on Kaggle, add the 'MIND News Recommendation' dataset directly.", exc)
+
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

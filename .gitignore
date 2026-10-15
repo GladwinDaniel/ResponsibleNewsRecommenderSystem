@@ -87,3 +87,8 @@ coverage.xml
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Temporary logs & scratch files
+*ERROR*.txt
+download.txt
+__huggingface_repos__.json
