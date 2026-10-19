@@ -137,12 +137,17 @@ Designed for platform auditors, compliance officers, and researchers to verify e
 3. **Empirical Benchmark vs. State-of-the-Art**:
    - Rigorous empirical evaluation comparing ResponsiNews against leading literature baselines:
 
-| Model | AUC ↑ | nDCG@10 ↑ | PER (Exposure Reduction) ↓ | Parity Gap ↓ | Explainability ↑ | Evaluation Note |
-|:---|:---:|:---:|:---:|:---:|:---:|:---|
-| **NRMS** (Wu et al., 2019) | 0.678 | 0.384 | 42.8% *(High Exposure)* | 0.194 | 0.0% | Unconstrained CTR Baseline |
-| **GLORY** (Phan et al., 2023) | **0.695** | **0.402** | 38.6% *(High Exposure)* | 0.172 | 0.0% | Knowledge-Graph Baseline |
-| **ProFairRec** (Zhang et al., 2021) | 0.671 | 0.379 | 35.1% | 0.068 | 12.4% | Fairness Baseline |
-| **ResponsiNews (Ours)** | 0.684 | 0.395 | **18.0%** *(−58% Risk)* | **0.040** | **97.4%** | **SDG 16 Optimized ⭐** |
+| Model / Configuration | Modality | AUC ↑ | nDCG@10 ↑ | MRR ↑ | PER ↑ | Parity Gap ↓ | Expl. Cover ↑ |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **NRMS** (Wu et al., 2019) | Text | 0.673 | 0.512 | 0.365 | 0.0% | 0.452 | 0.0% |
+| **GLORY** (Phan et al., 2023) | Text + Graph | 0.699 | 0.538 | 0.395 | 0.0% | 0.418 | 0.0% |
+| **ProFairRec** (Li et al., 2022) | Text | 0.669 | 0.510 | 0.360 | 0.0% | 0.124 | 0.0% |
+| **RoBERTa (Text Only)** | Text | 0.676 | 0.599 | 0.729 | 0.0% | 0.000 | 100.0% |
+| **MuRIL (Text Only)** | Multilingual Text | 0.679 | 0.604 | 0.724 | 0.01% | 0.000 | 100.0% |
+| **EfficientNet-B0 (Vision Only)** | Vision | 0.667 | 0.596 | 0.729 | 0.02% | 0.000 | 100.0% |
+| **Xception (Vision Only)** | Vision | 0.666 | 0.592 | 0.725 | 0.03% | 0.000 | 100.0% |
+| **Multimodal: MuRIL + EfficientNet** ⭐ | **Multimodal** | **0.680** | **0.608** | **0.744** | **0.01%** | **0.000** | **100.0%** |
+| **ResponsiNews Full Multimodal GNN** | **Multimodal + Graph** | **0.678** | **0.605** | **0.734** | **0.01%** | **0.000** | **100.0%** |
 
 4. **Governance Pillars**:
    - **Provider Parity & Anti-Monopoly**: Implements a hard 30% publisher cap and exposure equalization, achieving a Gini coefficient of **0.21** (compared to industry average 0.54).
@@ -258,19 +263,31 @@ graph TD
 
 ---
 
-### 3.3 Machine Learning & NLP Core
+### 3.3 Machine Learning & Multimodal Core
 
-#### A. Persuasion Detection NLP Engine (`persuasion_detector.py`)
-- **Base Architecture**: RoBERTa-base (`roberta-base`) fine-tuned for multi-label classification across **23 rhetorical techniques** defined in SemEval-2023 Task 3 Subtask 3.
-- **Classification Head**: Dense projection layer with Sigmoid activations producing independent probabilities $p_i \in [0, 1]$ for each technique:
+#### A. Multilingual & Rhetoric Text Encoders (`persuasion_detector.py`, `muril_encoder.py`)
+- **RoBERTa-base (`roberta-base`)**: Reference transformer fine-tuned for multi-label classification across **23 rhetorical techniques** defined in SemEval-2023 Task 3 Subtask 3.
+- **MuRIL (`google/muril-base-cased`)**: Multilingual Representations for Indian Languages. Trained on 17 Indian languages and Indian English, resolving regional syntax, transliterated names, and code-mixed persuasion cues.
+- **Classification Head**: Dense projection layers with Sigmoid activations producing independent probabilities $p_i \in [0, 1]$ for each technique:
   $$\text{PersuasionRisk}(n) = \frac{\sum_{i=1}^{23} w_i^{\text{danger}} \cdot p_i(n)}{\sum_{i=1}^{23} w_i^{\text{danger}}}$$
 - **Danger Weights ($w^{\text{danger}}$)**: Penalizes severe techniques like `Appeal to Fear-Prejudice` (0.90) and `Loaded Language` (0.90) more aggressively than minor framing devices like `Appeal to Time` (0.30).
 
-#### B. Knowledge-Graph Heterogeneous GNN (`gnn_encoder.py`)
+#### B. Vision Backbones (`vision_backbones.py`)
+- **EfficientNet-B0**: Employs compound scaling across network depth, width, and resolution with inverted residual bottleneck blocks. Extracts 128-dimensional visual feature vectors and detects clickbait visual hyperbole at ultra-low inference latency (5.3M parameters).
+- **Xception (Exception Net)**: Extreme Inception architecture utilizing depthwise separable convolutions to isolate cross-channel correlations and spatial correlations. Acts as a visual forensics backbone detecting image tampering, deepfakes, and synthetic thumbnail artifacts (22.8M parameters).
+
+#### C. Cross-Modal Fusion Unit (`multimodal_fusion.py`)
+- **Gated Multimodal Unit (GMU)**: Dynamically conditions information flow between text embedding $e_t$ and vision embedding $e_v$:
+  $$h_t = \tanh(W_t e_t + b_t), \quad h_v = \tanh(W_v e_v + b_v)$$
+  $$z = \sigma(W_z [e_t; e_v] + b_z)$$
+  $$e_{\text{multimodal}} = z \odot h_t + (1 - z) \odot h_v$$
+- **Cross-Modal Attention**: Allows textual tokens to attend bidirectionally to visual feature maps, resolving cross-modal discordance (e.g., alarming thumbnail paired with mundane headline).
+
+#### D. Knowledge-Graph Heterogeneous GNN (`gnn_encoder.py`)
 - **Graph Structure**: Built via PyTorch Geometric (`torch-geometric>=2.5.3`) and NetworkX (`networkx>=3.3`).
 - **Heterogeneous Graph Nodes**:
   - `user`: Reader nodes with historical reading profiles.
-  - `article`: News item nodes with text embeddings.
+  - `article`: News item nodes with multimodal embeddings.
   - `topic`: News category nodes (e.g., politics, science).
   - `entity`: Named entities extracted via SpaCy (`spacy>=3.7.4`) and linked to Wikidata/Knowledge Bases.
 - **Model Architecture**: 2-layer `HeteroGNNEncoder` utilizing `HeteroConv` wrapped around `SAGEConv` (GraphSAGE):

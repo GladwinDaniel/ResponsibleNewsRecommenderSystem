@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.7.9)  22 SEP 2026 19:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.7.9)  19 OCT 2026 18:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -308,43 +308,101 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 fg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-LaTeX Font Info:    Trying to load font information for U+msa on input line 62.
+<figures/system_architecture.pdf, id=1, 505.53923pt x 226.2051pt>
+File: figures/system_architecture.pdf Graphic file (type pdf)
+<use figures/system_architecture.pdf>
+Package pdftex.def Info: figures/system_architecture.pdf  used on input line 59
+.
+(pdftex.def)             Requested size: 495.36346pt x 221.65186pt.
 
- (C:\Users\gladw\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
+Underfull \hbox (badness 10000) in paragraph at lines 67--68
+[]\OT1/ptm/b/n/10 Multimodal Vi-sion Back-bones: \OT1/ptm/m/n/10 We in-te-grate
+
+ []
+
+
+Underfull \hbox (badness 5064) in paragraph at lines 67--68
+\OT1/ptm/m/n/10 EfficientNet-B0 [28] for parameter-efficient vi-sual
+ []
+
+
+Underfull \hbox (badness 6268) in paragraph at lines 67--68
+\OT1/ptm/m/n/10 fea-ture ex-trac-tion and Xcep-tion [29] for vi-sual
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [1{C:/Users/gladw/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/g
+ladw/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}
+
+
+] [2 <./figures/system_architecture.pdf>]
+LaTeX Font Info:    Trying to load font information for U+msa on input line 90.
+
+
+(C:\Users\gladw\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 62.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 90.
 
 
 (C:\Users\gladw\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-[1{C:/Users/gladw/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/gl
-adw/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}
-
-
-]
-LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 9
-5.
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 1
+00.
 
 (C:\Users\gladw\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
-Underfull \hbox (badness 2134) in paragraph at lines 95--96
-\OT1/ptm/m/n/10 and Pro-Fair-Rec, to-gether with a naive reranker and a
+Underfull \hbox (badness 10000) in paragraph at lines 100--101
+[]\OT1/ptm/b/n/10 Text En-coders: \OT1/ptm/m/n/10 We bench-mark RoBERTa-
  []
 
 
-Underfull \hbox (badness 1424) in paragraph at lines 95--96
-\OT1/ptm/m/n/10 po-nent at a time from the full sys-tem: the per-sua-sion
+Underfull \hbox (badness 10000) in paragraph at lines 100--101
+\OT1/ptm/m/n/10 base [37] against Google's MuRIL
  []
 
-[2]
-Underfull \hbox (badness 3977) in paragraph at lines 149--150
-[]\OT1/ptm/m/n/10 The ab-la-tion re-sults sup-port the im-por-tance of the
+
+Underfull \hbox (badness 10000) in paragraph at lines 100--101
+\OT1/ptm/m/n/10 (\OT1/pcr/m/n/10 google/muril-base-cased\OT1/ptm/m/n/10 ) [35].
+ MuRIL is
  []
 
-[3]
+<figures/multimodal_comparison.pdf, id=162, 248.11272pt x 183.0061pt>
+File: figures/multimodal_comparison.pdf Graphic file (type pdf)
+<use figures/multimodal_comparison.pdf>
+Package pdftex.def Info: figures/multimodal_comparison.pdf  used on input line 
+114.
+(pdftex.def)             Requested size: 252.0pt x 185.87347pt.
+
+Underfull \hbox (badness 4366) in paragraph at lines 125--127
+\OT1/ptm/m/n/10 The per-son-al-ized per-sua-sion risk is com-puted as the
+ []
+
+[3 <./figures/multimodal_comparison.pdf>]
+Underfull \hbox (badness 3907) in paragraph at lines 143--145
+[]\OT1/ptm/m/n/10 We mea-sure rank-ing ac-cu-racy via AUC, nDCG@5,
+ []
+
+
+Underfull \hbox (badness 2478) in paragraph at lines 143--145
+\OT1/ptm/m/n/10 nDCG@10, Mean Re-cip-ro-cal Rank (MRR), and Pre-ci-
+ []
+
+<figures/pareto_frontier.pdf, id=228, 248.47595pt x 180.71373pt>
+File: figures/pareto_frontier.pdf Graphic file (type pdf)
+<use figures/pareto_frontier.pdf>
+Package pdftex.def Info: figures/pareto_frontier.pdf  used on input line 153.
+(pdftex.def)             Requested size: 252.0pt x 183.28049pt.
+
+Underfull \hbox (badness 2277) in paragraph at lines 193--194
+\OT1/ptm/m/n/10 slightly lower AUC than Ef-fi-cient-Net (0.6765 vs.
+ []
+
+[4 <./figures/pareto_frontier.pdf>] [5]
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -356,41 +414,42 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[4
-
-] (respnews_ieee.aux)
+[6] (respnews_ieee.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 4243 strings out of 467871
- 66900 string characters out of 5418377
- 496504 words of memory out of 5000000
- 33077 multiletter control sequences out of 15000+600000
- 667918 words of font info for 119 fonts, out of 8000000 for 9000
+ 4321 strings out of 467871
+ 68612 string characters out of 5418377
+ 503819 words of memory out of 5000000
+ 33148 multiletter control sequences out of 15000+600000
+ 671926 words of font info for 128 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,9n,65p,1162b,290s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,9n,65p,1362b,278s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/gladw/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
 cmbx10.pfb><C:/Users/gladw/AppData/Local/Programs/MiKTeX/fonts/type1/public/ams
-fonts/cm/cmmi10.pfb><C:/Users/gladw/AppData/Local/Programs/MiKTeX/fonts/type1/p
-ublic/amsfonts/cm/cmmi7.pfb><C:/Users/gladw/AppData/Local/Programs/MiKTeX/fonts
-/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/gladw/AppData/Local/Programs/MiKT
-eX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/gladw/AppData/Local/Progra
-ms/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/gladw/AppData/Loc
-al/Programs/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/gladw/AppData/L
-ocal/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/gladw/AppData/L
-ocal/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/gladw/AppData/
-Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/gladw/AppData/
-Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on respnews_ieee.pdf (4 pages, 148283 bytes).
+fonts/cm/cmex10.pfb><C:/Users/gladw/AppData/Local/Programs/MiKTeX/fonts/type1/p
+ublic/amsfonts/cm/cmmi10.pfb><C:/Users/gladw/AppData/Local/Programs/MiKTeX/font
+s/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/gladw/AppData/Local/Programs/MiK
+TeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/gladw/AppData/Local/Prog
+rams/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/gladw/AppData/Lo
+cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/gladw/App
+Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/gl
+adw/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:
+/Users/gladw/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7
+.pfb><C:/Users/gladw/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
+cm/cmsy8.pfb><C:/Users/gladw/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
+msfonts/symbols/msbm10.pfb><C:/Users/gladw/AppData/Local/Programs/MiKTeX/fonts/
+type1/urw/courier/ucrr8a.pfb><C:/Users/gladw/AppData/Local/Programs/MiKTeX/font
+s/type1/urw/times/utmb8a.pfb><C:/Users/gladw/AppData/Local/Programs/MiKTeX/font
+s/type1/urw/times/utmbi8a.pfb><C:/Users/gladw/AppData/Local/Programs/MiKTeX/fon
+ts/type1/urw/times/utmr8a.pfb><C:/Users/gladw/AppData/Local/Programs/MiKTeX/fon
+ts/type1/urw/times/utmri8a.pfb>
+Output written on respnews_ieee.pdf (6 pages, 328473 bytes).
 PDF statistics:
- 71 PDF objects out of 1000 (max. 8388607)
+ 402 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

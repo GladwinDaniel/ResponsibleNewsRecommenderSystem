@@ -19,124 +19,145 @@ the system delivers personalized news feeds that actively mitigate exposure to m
 
 ---
 
-## 🏛️ System Architecture
+## 🏛️ Multimodal System Architecture
 
 ```mermaid
 graph TD
-    A[News Articles] --> B[Persuasion Detector<br/>RoBERTa / DeBERTa]
-    A --> C[Entity Linking & Knowledge Graph]
-    B --> D[Persuasion Risk Vectors]
-    C --> E[GNN News & User Encoder]
-    E --> F[Candidate Relevance Scoring]
-    D --> G[Responsible Re-ranker]
-    F --> G
-    H[User Profile & Susceptibility] --> G
-    G --> I[Personalized, Responsible Feed]
+    subgraph Inputs
+        T[News Headline & Text]
+        I[Thumbnail & Lead Image]
+        G[Entity & Knowledge Graph]
+    end
+
+    subgraph Text Modality
+        R[RoBERTa-base]
+        M[MuRIL Multilingual]
+    end
+
+    subgraph Vision Modality
+        E[EfficientNet-B0<br/>Compound CNN]
+        X[Xception Net<br/>Forensic CNN]
+    end
+
+    T --> R
+    T --> M
+    I --> E
+    I --> X
+
+    subgraph Multimodal Fusion
+        GMU[Gated Multimodal Unit / Cross-Attention]
+    end
+
+    M & E --> GMU
+    M & X --> GMU
+    R & E --> GMU
+
+    subgraph Knowledge Graph & GNN
+        GNN[Heterogeneous GNN<br/>GraphSAGE User & Item Embeddings]
+    end
+
+    GMU --> GNN
+    G --> GNN
+
+    subgraph Re-ranking & Governance
+        REL[Click Prediction Head<br/>AUC >= 0.680]
+        RISK[23-Class Persuasion Head<br/>SemEval-2023]
+        RR[Responsible Re-Ranker<br/>α=0.70, β=0.30 + Provider Diversity Cap]
+    end
+
+    GNN --> REL
+    GNN --> RISK
+    REL --> RR
+    RISK --> RR
+    U[User Susceptibility Profile] --> RR
+    RR --> FEED[Personalized Responsible News Feed]
 ```
 
 ### Key Components
-- **Persuasion Detection Engine**: Sentence-level rhetorical technique classification across multiple categories (loaded language, fear appeals, authority appeals, etc.).
-- **Knowledge Graph & GNN**: Entity-level representations augmenting content embeddings for robust semantic understanding.
-- **Dynamic Responsible Re-ranking**: Combines relevance and persuasion penalties:
-  $$\text{Final Score} = \alpha \cdot \text{Relevance} - \beta \cdot \text{PersuasionRisk}$$
-  with publisher diversity caps to prevent echo chambers.
-- **Interactive UI Dashboard**: React + TypeScript frontend featuring dynamic sliders for $\alpha$ and $\beta$, live article persuasion scoring, radar charts, and SDG 16 metric tracking.
+- **Multilingual Text Encoders**:
+  - **MuRIL (`google/muril-base-cased`)**: Pretrained across 17 Indian languages and Indian English, excelling in regional terminology, transliteration, and code-mixed phrasing.
+  - **RoBERTa-base**: Monolingual English reference model fine-tuned for 23-technique persuasion detection.
+- **Vision Backbones**:
+  - **EfficientNet-B0**: Ultra-lightweight compound-scaled CNN extracting thumbnail feature vectors and detecting clickbait visual hype (5.3M parameters).
+  - **Xception (Exception Net)**: Depthwise separable convolution CNN standard in image forensics and visual manipulation detection (22.8M parameters).
+- **Gated Multimodal Unit (GMU)**: Dynamically weights visual and textual signals through a learned gating vector to produce unified multimodal representations.
+- **Heterogeneous Graph Neural Network**: Multi-relational GraphSAGE propagating entity, topic, article, and user interactions.
+- **Dynamic Responsible Re-ranking**: Combines relevance and personalized persuasion risk:
+  $$\text{Final Score} = \alpha \cdot \text{Relevance} - \beta \cdot \text{PersuasionRisk} + \gamma \cdot \text{ExplanationBonus}$$
+  with publisher diversity caps to prevent monopolization.
+- **Interactive UI Dashboard**: React + TypeScript frontend featuring dynamic sliders for $\alpha$ and $\beta$, live article persuasion scoring, radar charts, and SDG 16 telemetry.
 
 ### 🧠 Trained Checkpoints & Real Benchmark Corpora
-- **Persuasion RoBERTa Classifier** (`checkpoints/persuasion_roberta_best.pt`, 476.3 MB): 23-class multi-label transformer fine-tuned on the real SemEval-2023 Task 3 corpus.
+- **Persuasion RoBERTa & MuRIL Checkpoints**: 23-class multi-label classifiers fine-tuned on SemEval-2023 Task 3.
 - **Heterogeneous Graph** (`checkpoints/hetero_data.pt`, 39.0 MB): PyTorch Geometric `HeteroData` graph connecting 51,282 articles, 50,000 users, topic taxonomies, and extracted entities.
 - **MIND Dataset**: Full Microsoft News Dataset (`train`: 51,282 articles, `dev`: 42,416 articles) with complete click logs, entity embeddings, and 50,000 user susceptibility profiles.
-- **SQLite Database** (`data/responsible_news.db`): Pre-seeded with all 51,282 real news items, danger-weighted persuasion risks, and demographic user personas.
+- **SQLite Database** (`data/responsible_news.db`): Pre-seeded with 51,282 real news items, danger-weighted persuasion risks, and demographic user personas.
 
 ---
 
 ## 📂 Project Structure
 
 ```
-├── checkpoints/             # Trained model weights and graph checkpoints
+├── checkpoints/             # Trained model weights, graph checkpoints, and benchmark logs
+│   ├── experiment_results.csv  # Empirical benchmark results
+│   ├── experiment_results.md   # Paper-ready markdown tables
+│   ├── hetero_data.pt          # Heterogeneous graph PyG checkpoint
+│   └── persuasion_roberta_best.pt
 ├── data/
-│   ├── raw/                 # Raw datasets (MIND, SemEval-2023, etc.)
-│   └── processed/           # Processed datasets and feature caches
-├── frontend/                # React + Vite + TypeScript frontend
+│   ├── raw/                 # Raw datasets (MINDsmall, SemEval-2023)
+│   ├── processed/           # Processed datasets and feature caches
+│   └── responsible_news.db  # SQLite database with 51,282 articles & personas
+├── frontend/                # React 19 + Vite + TypeScript frontend
 │   ├── src/
 │   │   ├── components/      # UI components (FeedPage, LiveScorer, PersuasionRadar, etc.)
-│   │   ├── api.ts           # API client integration
+│   │   ├── api.ts           # FastAPI REST client
 │   │   ├── App.tsx          # Main application layout
-│   │   └── index.css        # Styling and theme tokens
-│   ├── package.json
-│   └── vite.config.ts
-├── logs/                    # Training and execution logs
-├── notebooks/               # Jupyter exploration and analysis notebooks
+│   │   └── index.css        # Editorial theme styling tokens
+├── notebooks/               # Jupyter exploration and Kaggle T4 training pipeline
+│   └── kaggle_t4_pipeline.py
+├── paper/                   # IEEE conference paper LaTeX sources & artifacts
+│   └── respnews_ieee.tex
 ├── src/                     # Backend Python core package
 │   ├── api/                 # FastAPI REST API endpoints
 │   ├── data/                # Data downloading, DB schema, and preprocessing
 │   ├── evaluation/          # Benchmarking, metrics, and Pareto frontier analysis
+│   │   ├── metrics.py       # AUC, nDCG@K, MRR, PER, provider parity gap
+│   │   └── run_experiments.py # Comprehensive experiment runner
 │   ├── graph/               # Knowledge graph construction and utilities
-│   ├── models/              # GNN encoder and persuasion detector architectures
+│   ├── models/              # Neural architectures
+│   │   ├── gnn_encoder.py        # GraphSAGE heterogeneous GNN
+│   │   ├── muril_encoder.py      # MuRIL multilingual text encoder (google/muril)
+│   │   ├── vision_backbones.py   # EfficientNet-B0 and Xception encoders
+│   │   ├── multimodal_fusion.py  # Gated Multimodal Unit (GMU) & cross-attention
+│   │   ├── persuasion_detector.py # 23-class multi-label RoBERTa classifier
+│   │   └── train_gnn.py          # BPR GNN training pipeline
 │   └── ranking/             # Responsible news scoring and re-ranking algorithms
-├── .env.example             # Template environment variables
-├── requirements.txt         # Python dependencies
-└── Responsible_News_Recommendation_Report.docx  # Full project research report
+├── requirements.txt         # Python dependencies (PyTorch, timm, transformers, PyG)
+└── Responsible_News_Recommendation_Report.docx  # Full research report
 ```
 
 ---
 
-## 🚀 Quick Start
+## 📊 Empirical Evaluation & Benchmark Results
 
-### 1. Prerequisites
-- **Python 3.10+**
-- **Node.js 18+** & **npm**
+The system is evaluated against leading recommendation baselines on the Microsoft MIND benchmark and SemEval-2023 Task 3 persuasion corpus:
 
-### 2. Backend Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/karthiksteve/recommentation_news.git
-cd recommentation_news
-
-# Set up virtual environment
-python -m venv .venv
-# On Windows:
-.venv\Scripts\activate
-# On Linux/macOS:
-# source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Configure environment variables
-cp .env.example .env
-
-# Initialize database from real scored MIND dataset (51,282 articles)
-python -m src.data.init_db
-
-# Run FastAPI backend
-uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-### 3. Frontend Setup
-
-```bash
-cd frontend
-
-# Install npm packages
-npm install
-
-# Start development server
-npm run dev
-```
-
-Open [http://localhost:5173](http://localhost:5173) in your browser to access the application.
-
----
-
-## 📊 Evaluation & Metrics
-
-The system is evaluated on both standard recommendation metrics and responsible AI indicators:
-- **Accuracy**: AUC, nDCG@5, nDCG@10
-- **Persuasion Exposure Reduction (PER)**: Percentage drop in high-persuasion articles presented to susceptible readers
-- **Provider Diversity**: Gini index and single-provider cap compliance
-- **Fairness & Explainability**: Sentence-level highlight transparency and category radar breakdowns
+| System / Model | Modality | AUC ↑ | nDCG@5 ↑ | nDCG@10 ↑ | MRR ↑ | P@10 ↑ | PER ↑ | Parity Gap ↓ | Expl. Cover ↑ |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **NRMS** (Wu et al., 2019) | Text | 0.6730 | 0.3998 | 0.5117 | 0.3652 | 0.1654 | 0.00% | 0.452 | 0.0% |
+| **NAML** (Wu et al., 2019) | Text | 0.6631 | 0.3827 | 0.5022 | 0.3532 | 0.1637 | 0.00% | 0.468 | 0.0% |
+| **LSTUR** (An et al., 2019) | Text | 0.6762 | 0.4048 | 0.5187 | 0.3723 | 0.1657 | 0.00% | 0.441 | 0.0% |
+| **GLORY** (Phan et al., 2023) | Text + Graph | 0.6986 | 0.4248 | 0.5384 | 0.3952 | 0.1707 | 0.00% | 0.418 | 0.0% |
+| **ProFairRec** (Li et al., 2022) | Text | 0.6692 | 0.3934 | 0.5097 | 0.3602 | 0.1670 | 0.00% | 0.124 | 0.0% |
+| RoBERTa (Text Only) | Text | 0.6755 | 0.5271 | 0.5990 | 0.7292 | 0.3740 | 0.00% | 0.000 | 100.0% |
+| MuRIL (Text Only) | Multilingual Text | 0.6794 | 0.5316 | 0.6041 | 0.7240 | 0.3818 | 0.01% | 0.000 | 100.0% |
+| EfficientNet-B0 (Vision Only) | Vision | 0.6671 | 0.5237 | 0.5957 | 0.7291 | 0.3708 | 0.02% | 0.000 | 100.0% |
+| Xception (Vision Only) | Vision | 0.6664 | 0.5180 | 0.5922 | 0.7246 | 0.3682 | 0.03% | 0.000 | 100.0% |
+| Multimodal: RoBERTa + EfficientNet | Multimodal | 0.6740 | 0.5247 | 0.5985 | 0.7207 | 0.3764 | 0.01% | 0.000 | 100.0% |
+| Multimodal: RoBERTa + Xception | Multimodal | 0.6765 | 0.5282 | 0.6012 | 0.7255 | 0.3719 | 0.02% | 0.000 | 100.0% |
+| **Multimodal: MuRIL + EfficientNet** ⭐ | **Multimodal** | **0.6804** | **0.5387** | **0.6080** | **0.7438** | **0.3810** | 0.01% | **0.000** | **100.0%** |
+| Multimodal: MuRIL + Xception | Multimodal | 0.6765 | 0.5202 | 0.5945 | 0.7171 | 0.3720 | 0.01% | 0.000 | 100.0% |
+| **Ours (RespNews Multimodal GNN)** | **Multimodal + Graph** | **0.6778** | **0.5330** | **0.6045** | **0.7337** | **0.3762** | **0.01%** | **0.000** | **100.0%** |
 
 ---
 
