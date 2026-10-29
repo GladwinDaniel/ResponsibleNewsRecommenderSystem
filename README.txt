@@ -47,8 +47,8 @@ Project Root
   │     ├── requirements.txt     -> Complete Python dependency tree
   │     ├── .env.example         -> Environment variable template
   │     └── experiment_results.md-> Publication-ready tables
-  ├── Responsible_News_Recommendation_Report.docx  -> Complete Project Report (Word)
-  └── RespNews_Project_Presentation.pptx          -> Complete Presentation (PPTX, 26 slides)
+  ├── Responsible_News_Recommendation_Report_23MIA1058_23MIA1123.docx  -> Complete Project Report (Word)
+  └── RespNews_ Persuasion-Aware Knowledge-Graph-Augmented News Recommendation_23MIA1058_23MIA1123.pptx          -> Complete Presentation (PPTX, 26 slides)
 
 ================================================================================
 ALIGNMENT WITH UN SUSTAINABLE DEVELOPMENT GOAL 16:

@@ -150,8 +150,8 @@ graph TD
 │   ├── graph/                   # Knowledge graph construction and utilities
 │   ├── models/                  # Neural architectures (GNN, persuasion, MuRIL, vision)
 │   └── ranking/                 # Responsible news scoring and re-ranking algorithms
-├── Responsible_News_Recommendation_Report.docx  # Full project report
-└── RespNews_Project_Presentation.pptx           # Project presentation
+├── Responsible_News_Recommendation_Report_23MIA1058_23MIA1123.docx  # Full project report
+└── RespNews_ Persuasion-Aware Knowledge-Graph-Augmented News Recommendation_23MIA1058_23MIA1123.pptx           # Project presentation
 ```
 
 ---
