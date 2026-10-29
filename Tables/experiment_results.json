@@ -1,0 +1,357 @@
+{
+  "timestamp": "2026-10-19 13:47:59",
+  "baseline_comparison": {
+    "NRMS (Wu et al., 2019)": {
+      "auc": 0.6803722938578023,
+      "ndcg@5": 0.40896849537364754,
+      "ndcg@10": 0.5194505471917875,
+      "mrr": 0.3760684731934732,
+      "precision@10": 0.1635011904761905,
+      "per": 0.0,
+      "provider_parity_gap": 0.452,
+      "explainability_cover": 0.0,
+      "high_risk_suppressed": 0.0
+    },
+    "NAML (Wu et al., 2019)": {
+      "auc": 0.666187026944913,
+      "ndcg@5": 0.3816985361920523,
+      "ndcg@10": 0.495184122172938,
+      "mrr": 0.3454986915861916,
+      "precision@10": 0.1620291666666667,
+      "per": 0.0,
+      "provider_parity_gap": 0.468,
+      "explainability_cover": 0.0,
+      "high_risk_suppressed": 0.0
+    },
+    "LSTUR (An et al., 2019)": {
+      "auc": 0.675336638328845,
+      "ndcg@5": 0.38986725572407166,
+      "ndcg@10": 0.5078494130922833,
+      "mrr": 0.3601605977355978,
+      "precision@10": 0.1655214285714286,
+      "per": 0.0,
+      "provider_parity_gap": 0.441,
+      "explainability_cover": 0.0,
+      "high_risk_suppressed": 0.0
+    },
+    "GLORY (Phan et al., 2023)": {
+      "auc": 0.6894361027125783,
+      "ndcg@5": 0.4301915091252554,
+      "ndcg@10": 0.5374710329538179,
+      "mrr": 0.39840219225219226,
+      "precision@10": 0.16380436507936508,
+      "per": 0.0,
+      "provider_parity_gap": 0.418,
+      "explainability_cover": 0.0,
+      "high_risk_suppressed": 0.0
+    },
+    "ProFairRec (Li et al., 2022)": {
+      "auc": 0.6679203831245413,
+      "ndcg@5": 0.3868543014109239,
+      "ndcg@10": 0.5054600392694687,
+      "mrr": 0.35528004911754907,
+      "precision@10": 0.16749047619047622,
+      "per": 0.0,
+      "provider_parity_gap": 0.124,
+      "explainability_cover": 0.124,
+      "high_risk_suppressed": 0.02
+    },
+    "RoBERTa Text-Only": {
+      "auc": 0.6284044214983852,
+      "ndcg@5": 0.46070265558652396,
+      "ndcg@10": 0.5341987049925843,
+      "mrr": 0.6678238104552229,
+      "precision@10": 0.33494999999999997,
+      "per": 0.00026165246396277734,
+      "provider_parity_gap": 0.001588888888888889,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0
+    },
+    "MuRIL Text-Only": {
+      "auc": 0.6324806360981584,
+      "ndcg@5": 0.45916217532305165,
+      "ndcg@10": 0.5393175999870498,
+      "mrr": 0.6589216354238296,
+      "precision@10": 0.34085000000000004,
+      "per": 0.0001703699496297989,
+      "provider_parity_gap": 0.0012000000000000001,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0
+    },
+    "EfficientNet-B0 Vision-Only": {
+      "auc": 0.621513805437243,
+      "ndcg@5": 0.44859412585050107,
+      "ndcg@10": 0.5271410074989917,
+      "mrr": 0.6506769209935233,
+      "precision@10": 0.3339,
+      "per": 0.0,
+      "provider_parity_gap": 0.001588888888888889,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0
+    },
+    "Xception Vision-Only": {
+      "auc": 0.6264986089556649,
+      "ndcg@5": 0.45328691711065683,
+      "ndcg@10": 0.5294007542289677,
+      "mrr": 0.6515007697698759,
+      "precision@10": 0.33365,
+      "per": 2.329779548578929e-05,
+      "provider_parity_gap": 0.0012000000000000001,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0
+    },
+    "Multimodal: RoBERTa + EfficientNet": {
+      "auc": 0.6364722781681479,
+      "ndcg@5": 0.4668362069193587,
+      "ndcg@10": 0.5467533423880122,
+      "mrr": 0.6709718083150938,
+      "precision@10": 0.343,
+      "per": 0.000116776887162547,
+      "provider_parity_gap": 0.0016,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0
+    },
+    "Multimodal: RoBERTa + Xception": {
+      "auc": 0.6332836027476456,
+      "ndcg@5": 0.4613401616130684,
+      "ndcg@10": 0.5409211872192456,
+      "mrr": 0.6674387887968847,
+      "precision@10": 0.34079999999999994,
+      "per": 0.00028347563742043484,
+      "provider_parity_gap": 0.0016,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0
+    },
+    "Multimodal: MuRIL + EfficientNet": {
+      "auc": 0.6393314092975145,
+      "ndcg@5": 0.4717829754320958,
+      "ndcg@10": 0.5469983011229838,
+      "mrr": 0.6751756582585802,
+      "precision@10": 0.3465,
+      "per": 5.348731436976512e-05,
+      "provider_parity_gap": 0.001988888888888889,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0
+    },
+    "Multimodal: MuRIL + Xception": {
+      "auc": 0.6389833433920495,
+      "ndcg@5": 0.4676111354613317,
+      "ndcg@10": 0.5441266841539525,
+      "mrr": 0.663022400702265,
+      "precision@10": 0.34429999999999994,
+      "per": 0.0001506303458678901,
+      "provider_parity_gap": 0.0004,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0
+    },
+    "Ours (RespNews Multimodal GNN)": {
+      "auc": 0.6356898109694014,
+      "ndcg@5": 0.46725986557136845,
+      "ndcg@10": 0.5454387023188626,
+      "mrr": 0.6782162165672305,
+      "precision@10": 0.34029999999999994,
+      "per": 0.0,
+      "provider_parity_gap": 0.001588888888888889,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0
+    }
+  },
+  "ablation_study": {
+    "Full System": {
+      "auc": 0.6360956196743534,
+      "ndcg@5": 0.46689651556209055,
+      "ndcg@10": 0.541634317575467,
+      "mrr": 0.6669373992158512,
+      "precision@10": 0.3431,
+      "per": 0.00021017531702023095,
+      "provider_parity_gap": 0.001988888888888889,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0,
+      "description": "Complete pipeline: MuRIL + Xception + HeteroGNN + Policy"
+    },
+    "w/o Persuasion Penalty": {
+      "auc": 0.6381102142421334,
+      "ndcg@5": 0.46129413073868375,
+      "ndcg@10": 0.5440418035933343,
+      "mrr": 0.6586537779528954,
+      "precision@10": 0.3474,
+      "per": 0.0,
+      "provider_parity_gap": 0.0016,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0,
+      "description": "Remove persuasion risk penalty (\u03b2=0)"
+    },
+    "w/o Susceptibility": {
+      "auc": 0.6401838162070453,
+      "ndcg@5": 0.46653824325666277,
+      "ndcg@10": 0.5465202727469203,
+      "mrr": 0.6649601046665753,
+      "precision@10": 0.34485000000000005,
+      "per": 0.00018208417732167538,
+      "provider_parity_gap": 0.0012000000000000001,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0,
+      "description": "Remove personalized user susceptibility weighting"
+    },
+    "w/o GNN Embeddings": {
+      "auc": 0.6334417354977269,
+      "ndcg@5": 0.46262818924003696,
+      "ndcg@10": 0.5392597309195856,
+      "mrr": 0.6618407564279546,
+      "precision@10": 0.3426,
+      "per": 0.00020782382916351274,
+      "provider_parity_gap": 0.0011888888888888889,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0,
+      "description": "Replace GNN graph embeddings with isolated representations"
+    },
+    "w/o Vision Backbone (MuRIL Text-Only)": {
+      "auc": 0.6300206094622585,
+      "ndcg@5": 0.45508994815781884,
+      "ndcg@10": 0.5334834731465439,
+      "mrr": 0.6541948432903189,
+      "precision@10": 0.33744999999999997,
+      "per": 0.00010116380271091797,
+      "provider_parity_gap": 0.001588888888888889,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0,
+      "description": "Remove image embeddings; text-only MuRIL"
+    },
+    "w/o MuRIL (RoBERTa Text Backbone)": {
+      "auc": 0.6314416375570131,
+      "ndcg@5": 0.45823311939519484,
+      "ndcg@10": 0.5372020052511675,
+      "mrr": 0.6617443068956302,
+      "precision@10": 0.34059999999999996,
+      "per": 1.804640175920569e-05,
+      "provider_parity_gap": 0.0011888888888888889,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0,
+      "description": "Replace MuRIL multilingual text encoder with RoBERTa-base"
+    },
+    "w/o Provider Cap": {
+      "auc": 0.6350536085696651,
+      "ndcg@5": 0.46109163739787445,
+      "ndcg@10": 0.5418842001533933,
+      "mrr": 0.6657788397396639,
+      "precision@10": 0.3368,
+      "per": 1.6613130654260246e-05,
+      "provider_parity_gap": 0.0008,
+      "explainability_cover": 1.0,
+      "high_risk_suppressed": 1.0,
+      "description": "Remove provider diversity cap"
+    }
+  },
+  "pareto_frontier": [
+    {
+      "beta": 0.0,
+      "alpha": 1.0,
+      "avg_relevance": 0.787,
+      "avg_persuasion_risk": 0.1422,
+      "per_pct": 0.0,
+      "high_risk_count": 0.0,
+      "provider_parity_gap": 0.4,
+      "is_recommended": false
+    },
+    {
+      "beta": 0.1,
+      "alpha": 0.97,
+      "avg_relevance": 0.7865,
+      "avg_persuasion_risk": 0.1416,
+      "per_pct": 0.3,
+      "high_risk_count": 0.0,
+      "provider_parity_gap": 0.4,
+      "is_recommended": false
+    },
+    {
+      "beta": 0.2,
+      "alpha": 0.94,
+      "avg_relevance": 0.7853,
+      "avg_persuasion_risk": 0.1412,
+      "per_pct": 0.6,
+      "high_risk_count": 0.0,
+      "provider_parity_gap": 0.4,
+      "is_recommended": false
+    },
+    {
+      "beta": 0.3,
+      "alpha": 0.91,
+      "avg_relevance": 0.7869,
+      "avg_persuasion_risk": 0.141,
+      "per_pct": 0.7,
+      "high_risk_count": 0.0,
+      "provider_parity_gap": 0.4,
+      "is_recommended": true
+    },
+    {
+      "beta": 0.4,
+      "alpha": 0.88,
+      "avg_relevance": 0.7891,
+      "avg_persuasion_risk": 0.1409,
+      "per_pct": 0.8,
+      "high_risk_count": 0.0,
+      "provider_parity_gap": 0.4,
+      "is_recommended": false
+    },
+    {
+      "beta": 0.5,
+      "alpha": 0.85,
+      "avg_relevance": 0.7861,
+      "avg_persuasion_risk": 0.1408,
+      "per_pct": 0.9,
+      "high_risk_count": 0.0,
+      "provider_parity_gap": 0.4,
+      "is_recommended": false
+    },
+    {
+      "beta": 0.6,
+      "alpha": 0.82,
+      "avg_relevance": 0.7864,
+      "avg_persuasion_risk": 0.1408,
+      "per_pct": 0.9,
+      "high_risk_count": 0.0,
+      "provider_parity_gap": 0.4,
+      "is_recommended": false
+    },
+    {
+      "beta": 0.7,
+      "alpha": 0.79,
+      "avg_relevance": 0.7885,
+      "avg_persuasion_risk": 0.1407,
+      "per_pct": 1.0,
+      "high_risk_count": 0.0,
+      "provider_parity_gap": 0.4,
+      "is_recommended": false
+    },
+    {
+      "beta": 0.8,
+      "alpha": 0.76,
+      "avg_relevance": 0.7841,
+      "avg_persuasion_risk": 0.1406,
+      "per_pct": 1.0,
+      "high_risk_count": 0.0,
+      "provider_parity_gap": 0.4,
+      "is_recommended": false
+    },
+    {
+      "beta": 0.9,
+      "alpha": 0.73,
+      "avg_relevance": 0.7862,
+      "avg_persuasion_risk": 0.1406,
+      "per_pct": 1.0,
+      "high_risk_count": 0.0,
+      "provider_parity_gap": 0.4,
+      "is_recommended": false
+    },
+    {
+      "beta": 1.0,
+      "alpha": 0.7,
+      "avg_relevance": 0.7848,
+      "avg_persuasion_risk": 0.1405,
+      "per_pct": 1.1,
+      "high_risk_count": 0.0,
+      "provider_parity_gap": 0.4,
+      "is_recommended": false
+    }
+  ]
+}

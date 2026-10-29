@@ -1,7 +1,22 @@
-# Responsible News Recommendation
+# RespNews: Persuasion-Aware Knowledge-Graph-Augmented News Recommendation for Responsible News Delivery
 
 > **Persuasion-Aware, Knowledge-Graph-Augmented Recommendation for Trustworthy News Delivery**  
 > *Aligned with United Nations Sustainable Development Goal 16: Peace, Justice and Strong Institutions*
+
+---
+
+## 👥 Authors
+
+| Name | Register Number | Email |
+|:---|:---|:---|
+| **Gladwin Daniel P** | 23MIA1058 | gladwindaniel.p2023@vitstudent.ac.in |
+| **Karthikeyan A** | 23MIA1123 | karthikeyan.a2023@vitstudent.ac.in |
+
+**Project Mentor:** Dr S Vigneshwari  
+**Course:** CSE4077 – Recommender Systems | Slot: A1+TA1  
+**Program:** MTech Integrated CSE (Business Analytics)  
+**Institution:** School of Computer Science and Engineering, Vellore Institute of Technology, Chennai  
+**Date:** October 2026
 
 ---
 
@@ -13,7 +28,8 @@ By integrating:
 1. **Transformer-based Persuasion Detection** (identifying rhetorical techniques like loaded language, fear appeals, and appeals to authority)
 2. **Knowledge-Graph Augmentation** (entity linking and semantic relations)
 3. **Graph Neural Network (GNN) User-Item Modeling**
-4. **Responsible News Scoring (RNS)** with customizable trade-off parameters ($\alpha$ vs $\beta$) and provider diversity capping
+4. **Multimodal Fusion** via Gated Multimodal Unit (GMU) combining MuRIL text + EfficientNet-B0/Xception vision
+5. **Responsible News Scoring (RNS)** with customizable trade-off parameters (α vs β) and provider diversity capping
 
 the system delivers personalized news feeds that actively mitigate exposure to manipulation and polarization.
 
@@ -83,9 +99,9 @@ graph TD
 - **Gated Multimodal Unit (GMU)**: Dynamically weights visual and textual signals through a learned gating vector to produce unified multimodal representations.
 - **Heterogeneous Graph Neural Network**: Multi-relational GraphSAGE propagating entity, topic, article, and user interactions.
 - **Dynamic Responsible Re-ranking**: Combines relevance and personalized persuasion risk:
-  $$\text{Final Score} = \alpha \cdot \text{Relevance} - \beta \cdot \text{PersuasionRisk} + \gamma \cdot \text{ExplanationBonus}$$
+  `Final Score = α · Relevance − β · PersuasionRisk + γ · ExplanationBonus`
   with publisher diversity caps to prevent monopolization.
-- **Interactive UI Dashboard**: React + TypeScript frontend featuring dynamic sliders for $\alpha$ and $\beta$, live article persuasion scoring, radar charts, and SDG 16 telemetry.
+- **Interactive UI Dashboard**: React + TypeScript frontend featuring dynamic sliders for α and β, live article persuasion scoring, radar charts, and SDG 16 telemetry.
 
 ### 🧠 Trained Checkpoints & Real Benchmark Corpora
 - **Persuasion RoBERTa & MuRIL Checkpoints**: 23-class multi-label classifiers fine-tuned on SemEval-2023 Task 3.
@@ -98,42 +114,44 @@ graph TD
 ## 📂 Project Structure
 
 ```
-├── checkpoints/             # Trained model weights, graph checkpoints, and benchmark logs
-│   ├── experiment_results.csv  # Empirical benchmark results
-│   ├── experiment_results.md   # Paper-ready markdown tables
-│   ├── hetero_data.pt          # Heterogeneous graph PyG checkpoint
+├── README.md                    # This file (Project overview, authors, mentor)
+├── Figures/                     # All figures and diagrams used in the project
+├── Tables/                      # All CSV, XLSX, JSON data files
+│   ├── experiment_results.csv   # Main benchmark results
+│   ├── experiment_results.json  # Results in JSON format
+│   ├── pareto_frontier.csv      # Pareto trade-off data
+│   └── *_users.json / *_persuasion_profiles.json
+├── Others/                      # Other important files for reproducibility
+│   ├── requirements.txt         # Python dependencies
+│   ├── .env.example             # Environment variable template
+│   └── experiment_results.md    # Paper-ready markdown tables
+├── checkpoints/                 # Trained model weights and graph checkpoints
+│   ├── experiment_results.csv   # Empirical benchmark results
+│   ├── hetero_data.pt           # Heterogeneous graph PyG checkpoint
 │   └── persuasion_roberta_best.pt
 ├── data/
-│   ├── raw/                 # Raw datasets (MINDsmall, SemEval-2023)
-│   ├── processed/           # Processed datasets and feature caches
-│   └── responsible_news.db  # SQLite database with 51,282 articles & personas
-├── frontend/                # React 19 + Vite + TypeScript frontend
-│   ├── src/
-│   │   ├── components/      # UI components (FeedPage, LiveScorer, PersuasionRadar, etc.)
-│   │   ├── api.ts           # FastAPI REST client
-│   │   ├── App.tsx          # Main application layout
-│   │   └── index.css        # Editorial theme styling tokens
-├── notebooks/               # Jupyter exploration and Kaggle T4 training pipeline
-│   └── kaggle_t4_pipeline.py
-├── paper/                   # IEEE conference paper LaTeX sources & artifacts
-│   └── respnews_ieee.tex
-├── src/                     # Backend Python core package
-│   ├── api/                 # FastAPI REST API endpoints
-│   ├── data/                # Data downloading, DB schema, and preprocessing
-│   ├── evaluation/          # Benchmarking, metrics, and Pareto frontier analysis
-│   │   ├── metrics.py       # AUC, nDCG@K, MRR, PER, provider parity gap
-│   │   └── run_experiments.py # Comprehensive experiment runner
-│   ├── graph/               # Knowledge graph construction and utilities
-│   ├── models/              # Neural architectures
-│   │   ├── gnn_encoder.py        # GraphSAGE heterogeneous GNN
-│   │   ├── muril_encoder.py      # MuRIL multilingual text encoder (google/muril)
-│   │   ├── vision_backbones.py   # EfficientNet-B0 and Xception encoders
-│   │   ├── multimodal_fusion.py  # Gated Multimodal Unit (GMU) & cross-attention
-│   │   ├── persuasion_detector.py # 23-class multi-label RoBERTa classifier
-│   │   └── train_gnn.py          # BPR GNN training pipeline
-│   └── ranking/             # Responsible news scoring and re-ranking algorithms
-├── requirements.txt         # Python dependencies (PyTorch, timm, transformers, PyG)
-└── Responsible_News_Recommendation_Report.docx  # Full research report
+│   ├── raw/                     # Raw datasets (MINDsmall, SemEval-2023)
+│   ├── processed/               # Processed datasets and feature caches
+│   └── responsible_news.db      # SQLite database with 51,282 articles & personas
+├── frontend/                    # React 19 + Vite + TypeScript frontend
+│   └── src/
+│       ├── components/          # UI components (FeedPage, LiveScorer, PersuasionRadar, etc.)
+│       ├── api.ts               # FastAPI REST client
+│       ├── App.tsx              # Main application layout
+│       └── index.css            # Editorial theme styling tokens
+├── notebooks/                   # Jupyter exploration and Kaggle T4 training pipeline
+│   └── kaggle_training_pipeline.ipynb
+├── paper/                       # IEEE conference paper LaTeX sources & artifacts
+│   └── respnews_ieee_recommenderSystem.tex
+├── src/                         # Backend Python core package
+│   ├── api/                     # FastAPI REST API endpoints
+│   ├── data/                    # Data downloading, DB schema, and preprocessing
+│   ├── evaluation/              # Benchmarking, metrics, and Pareto frontier analysis
+│   ├── graph/                   # Knowledge graph construction and utilities
+│   ├── models/                  # Neural architectures (GNN, persuasion, MuRIL, vision)
+│   └── ranking/                 # Responsible news scoring and re-ranking algorithms
+├── Responsible_News_Recommendation_Report.docx  # Full project report
+└── RespNews_Project_Presentation.pptx           # Project presentation
 ```
 
 ---

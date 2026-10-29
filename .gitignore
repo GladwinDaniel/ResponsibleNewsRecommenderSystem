@@ -10,37 +10,11 @@ __pycache__/
 venv/
 ENV/
 env/
-env.bak/
-venv.bak/
 
-# Distribution & Builds
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# Data & Model weights (prevent committing large binary data)
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
-checkpoints/*
-!checkpoints/.gitkeep
-logs/*
-!logs/.gitkeep
+# Data & Model weights (at root)
+/data/
+/checkpoints/
+/logs/
 *.pt
 *.pth
 *.bin
@@ -48,47 +22,36 @@ logs/*
 *.sqlite3
 *.db
 
-# Frontend
-frontend/node_modules/
-frontend/dist/
-frontend/dist-ssr/
-frontend/.local/
-frontend/*.log
-frontend/npm-debug.log*
-frontend/yarn-debug.log*
-frontend/yarn-error.log*
-frontend/pnpm-debug.log*
+# College submission ZIP archives (local submission only)
+*.zip
 
-# Unit test & coverage
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
+# Loose root directories and scratch files not in mam's directory format
+/src/
+/frontend/
+/notebooks/
+/paper/
 
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints
+# Loose root files not in mam's directory format
+/requirements.txt
+/.env.example
+/DASHBOARD_AND_TECHSTACK.md
+/doc_content.txt
+/download.txt
+/ERROR.txt
+/NEW ERROR.txt
+/__huggingface_repos__.json
+/RespNews_ Persuasion-Aware Knowledge-Graph-Augmented News Recommendation (1).pptx
 
-# Editor / IDE artifacts
-.vscode/
-!.vscode/extensions.json
-.idea/
-*.swp
-*.swo
+# LaTeX build artifacts
+*.aux
+*.log
+*.synctex.gz
 
-# OS files
+# OS and Editor files
 .DS_Store
 Thumbs.db
 Desktop.ini
-
-# Temporary logs & scratch files
-*ERROR*.txt
-download.txt
-__huggingface_repos__.json
+.vscode/
+.idea/
+*.swp
+*.swo
